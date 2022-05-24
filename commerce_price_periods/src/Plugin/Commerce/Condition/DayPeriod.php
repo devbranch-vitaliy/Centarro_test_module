@@ -73,7 +73,7 @@ class DayPeriod extends ConditionBase implements ContainerFactoryPluginInterface
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
-    $periods = $this->pricePeriodsService->info();
+    $periods = $this->pricePeriodsService::info();
     $options = array_combine(array_keys($periods), array_column($periods, 'title'));
     $form['periods'] = [
       '#type' => 'checkboxes',

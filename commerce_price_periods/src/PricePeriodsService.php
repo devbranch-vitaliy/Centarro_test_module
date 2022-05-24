@@ -38,7 +38,7 @@ class PricePeriodsService implements PricePeriodsServiceInterface {
     $start_of_period = strtotime('today', $current_time);
     $eight_hours = 3600 * 8;
 
-    foreach ($this->info() as $period => $info) {
+    foreach (self::info() as $period => $info) {
       if ($start_of_period <= $current_time && $current_time < $start_of_period + $eight_hours) {
         return $period;
       }

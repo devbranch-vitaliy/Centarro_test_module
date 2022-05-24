@@ -24,6 +24,17 @@ function commerce_price_periods_help($route_name, RouteMatchInterface $route_mat
 }
 
 /**
+ * Implements hook_entity_type_alter().
+ */
+function commerce_price_periods_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  if (isset($entity_types['commerce_product_variation'])) {
+    $variation = $entity_types['commerce_product_variation'];
+    $variation->setClass('Drupal\commerce_price_periods\Entity\ProductVariationPricePeriods');
+  }
+}
+
+/**
  * Implements hook_views_data().
  */
 function commerce_price_periods_views_data() {

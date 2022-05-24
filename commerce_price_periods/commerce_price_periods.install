@@ -2,41 +2,34 @@
 
 /**
  * @file
- * Contains install, uninstall and update functions for price periods.
+ * Contains install and update functions for price periods.
  */
 
-use Drupal\field\Entity\FieldConfig;
+/**
+ * Implements hook_install().
+ */
+function commerce_price_periods_install() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
+  $fields = \Drupal::service('commerce_price_periods.price_periods')::getCustomFieldDefinitions();
+  foreach ($fields as $name => $definition) {
+    $definition_update_manager->installFieldStorageDefinition($name, 'commerce_product_variation', 'commerce_product', $definition);
+  }
+}
 
 /**
  * Implements hook_uninstall().
  */
 function commerce_price_periods_uninstall() {
-  $plugin_id = 'price_periods';
-  $entity_type_id = 'commerce_product_variation';
-  $config_id = 'commerce_product.commerce_product_variation_type.';
-  $field_names = array_keys(\Drupal::service('commerce_price_periods.price_periods')->info());
-  $bundles = array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id));
-
-  /** @var \Drupal\commerce\EntityTraitManagerInterface $trait_manager $trait_manager */
-  $trait_manager = \Drupal::service('plugin.manager.commerce_entity_trait');
-  /** @var \Drupal\commerce_price_periods\Plugin\Commerce\EntityTrait\PricePeriods $trait */
-  $trait = $trait_manager->createInstance($plugin_id);
-  foreach ($bundles as $bundle) {
-    foreach ($field_names as $field_name) {
-      $field = FieldConfig::loadByName($entity_type_id, $bundle, $field_name);
-      if ($field) {
-        // Remove field of the trait.
-        $trait_manager->uninstallTrait($trait, $entity_type_id, $bundle);
-
-        // Remove plugin from the entity config.
-        /** @var \Drupal\Core\Config\Config $config_storage */
-        $config_storage = \Drupal::service('config.factory')->getEditable($config_id . $bundle);
-        $entity_traits = $config_storage->get('traits');
-        if (($key = array_search($plugin_id, $entity_traits)) !== FALSE) {
-          unset($entity_traits[$key]);
-          $config_storage->set('traits', $entity_traits);
-          $config_storage->save();
-        }
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  if ($definition_update_manager->getEntityType('commerce_product')) {
+    // Computed field definitions are not tracked by the entity definition
+    // update manager, so remove them.
+    $periods = \Drupal::service('commerce_price_periods.price_periods')::info();
+    foreach ($periods as $period => $info) {
+      $storage_definition = $definition_update_manager->getFieldStorageDefinition($period, 'commerce_product_variation');
+      if ($storage_definition) {
+        $definition_update_manager->uninstallFieldStorageDefinition($storage_definition);
       }
     }
   }
