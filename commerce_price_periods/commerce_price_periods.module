@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_price_periods.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_price_periods_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_price_periods module.
+    case 'help.page.commerce_price_periods':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provide different periods for different product prices') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function commerce_price_periods_views_data() {
+  $definition = \Drupal::entityTypeManager()->getDefinition('commerce_product_variation');
+  $tables = [$definition->getDataTable(), $definition->getRevisionDataTable()];
+  $data = [];
+  foreach ($tables as $table) {
+    if ($table) {
+      $data[$table]['price_by_period'] = [
+        'title' => t('Price by period'),
+        'argument' => [
+          'id' => 'standard',
+          'field_name' => 'price',
+        ],
+        'field' => [
+          'id' => 'price_by_period',
+        ],
+        'entity field' => 'price',
+      ];
+    }
+  }
+  return $data;
+}

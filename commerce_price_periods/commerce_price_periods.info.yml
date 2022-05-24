@@ -1,0 +1,9 @@
+name: 'Commerce price periods'
+type: module
+description: 'Provide different periods for different product prices'
+core_version_requirement: ^9
+package: 'Commerce (custom)'
+dependencies:
+  - commerce:commerce
+  - commerce:commerce_price
+  - commerce:commerce_product
