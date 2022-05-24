@@ -34,18 +34,24 @@ class PricePeriodsService implements PricePeriodsServiceInterface {
    * {@inheritDoc}
    */
   public function getCurrentPeriod(): ?string {
-    $current_time = $this->time->getRequestTime();
-    $start_of_period = strtotime('today', $current_time);
-    $eight_hours = 3600 * 8;
+    // Get timestamp of the request time.
+    $request_time = $this->time->getRequestTime();
 
-    foreach ($this->info() as $period => $info) {
-      if ($start_of_period <= $current_time && $current_time < $start_of_period + $eight_hours) {
-        return $period;
-      }
-      $start_of_period += $eight_hours;
-    }
+    // Prepare current time from the request timestamp.
+    $current_time = new \DateTime();
+    $current_time->setTimestamp($request_time);
 
-    return NULL;
+    // Prepare a start time for the day.
+    $day_start = clone $current_time;
+    $day_start->setTime(0, 0, 0, 0);
+
+    // Check difference between date times.
+    $diff = $current_time->diff($day_start);
+
+    // Retrieve period of the day according to the diff.
+    $periods = $this->info();
+    $period = array_splice($periods, intdiv($diff->h, 8), 1);
+    return array_key_first($period);
   }
 
 }
