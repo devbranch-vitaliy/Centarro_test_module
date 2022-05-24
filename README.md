@@ -12,7 +12,7 @@ Show prices based on time period on product page.
 Administrator should be able to adjust/changes prices per period.
 Administrator should be able to mark specific period as free shipping. If product is purchased in that period there is no shipping cost.
 
-##What I have done:
+## What I have done:
 - Provided new price fields through EntityTrait. It means that we can enable/disable them on the 'Product variation types' config form.
 - Made a new custom view field 'Price by period'. This field returns the price according to the day period or default one.
 - Made a new commerce condition 'Day period' which allow to configure the rules of the shipping methods.
