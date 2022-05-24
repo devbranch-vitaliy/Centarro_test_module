@@ -30,7 +30,7 @@ class DayPeriod extends ConditionBase implements ContainerFactoryPluginInterface
   protected PricePeriodsServiceInterface $pricePeriodsService;
 
   /**
-   * Constructs a PricePeriodsService object.
+   * Constructs a DayPeriod object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
