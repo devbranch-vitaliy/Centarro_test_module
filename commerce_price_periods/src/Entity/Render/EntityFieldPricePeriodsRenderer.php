@@ -100,7 +100,7 @@ class EntityFieldPricePeriodsRenderer extends EntityFieldRenderer {
             ]);
             // Retrieve all related fields.
             if ($field instanceof ProductVariationPriceByPeriod) {
-              foreach ($this->pricePeriodsService->info() as $period => $info) {
+              foreach ($this->pricePeriodsService::info() as $period => $info) {
                 $display->setComponent($period, [
                   'type' => $field->options['type'],
                   'settings' => $field->options['settings'],

@@ -49,7 +49,7 @@ class PricePeriodsService implements PricePeriodsServiceInterface {
     $diff = $current_time->diff($day_start);
 
     // Retrieve period of the day according to the diff.
-    $periods = $this->info();
+    $periods = self::info();
     $period = array_splice($periods, intdiv($diff->h, 8), 1);
     return array_key_first($period);
   }

@@ -2,7 +2,7 @@
 
 namespace Drupal\commerce_price_periods;
 
-use Drupal\entity\BundleFieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Provides a trait for Commerce price periods.
@@ -15,7 +15,7 @@ trait PricePeriodsTrait {
    * @return array
    *   The info about price periods.
    */
-  public function info(): array {
+  public static function info(): array {
     return [
       'morning' => [
         'title' => t('Morning price: 00:00 - 08:00'),
@@ -38,10 +38,10 @@ trait PricePeriodsTrait {
    * @return \Drupal\Core\Field\BaseFieldDefinition[]
    *   Field definitions.
    */
-  public function getCustomBundleFieldDefinitions(): array {
+  public static function getCustomFieldDefinitions(): array {
     $fields = [];
-    foreach ($this->info() as $period => $info) {
-      $fields[$period] = BundleFieldDefinition::create('commerce_price')
+    foreach (self::info() as $period => $info) {
+      $fields[$period] = BaseFieldDefinition::create('commerce_price')
         ->setLabel($info['title'])
         ->setDescription($info['description'])
         ->setDisplayOptions('view', [
